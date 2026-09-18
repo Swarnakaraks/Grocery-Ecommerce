@@ -9,65 +9,66 @@ import { sendOtpEmail, sendVerificationEmail } from "../utils/mailer.js";
 import { EmailVerification} from "../models/emailVerification.model.js";
 
 export const registerUser = async (req, res) => {
-    try{
+    try {
+        const { fullName, email, password } = req.body;
 
-        const {fullName, email, password} = req.body;
-
-        if(!fullName || !email || !password ){
+        if (!fullName || !email || !password) {
             return res.status(400).json({
                 success: false,
-                message: "FullName , email, password are required"
+                message: "FullName, email, password are required"
             });
         }
 
+        const normalizedEmail = email.trim().toLowerCase();
 
-        const existingUser = await User.findOne({email})
+        const existingUser = await User.findOne({
+            email: normalizedEmail
+        });
 
-        if(existingUser){
+        if (existingUser) {
             return res.status(409).json({
                 success: false,
                 message: "User already exists"
-            })
+            });
         }
 
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
 
+        // Create user
         const user = await User.create({
-            fullName,
-            email,
+            fullName: fullName.trim(),
+            email: normalizedEmail,
             password: hashedPassword
         });
 
+        // Generate verification token
         const verificationToken = crypto
-    .randomBytes(32)
-    .toString("hex");
+            .randomBytes(32)
+            .toString("hex");
 
-const verificationTokenHash = crypto
-    .createHash("sha256")
-    .update(verificationToken)
-    .digest("hex");
+        const verificationTokenHash = crypto
+            .createHash("sha256")
+            .update(verificationToken)
+            .digest("hex");
 
-await EmailVerification.create({
-    user: user._id,
-    tokenHash: verificationTokenHash,
-    expiresAt: new Date(
-        Date.now() + 24 * 60 * 60 * 1000
-    )
-});
+        // Save verification token
+        await EmailVerification.create({
+            user: user._id,
+            tokenHash: verificationTokenHash,
+            expiresAt: new Date(
+                Date.now() + 24 * 60 * 60 * 1000
+            )
+        });
 
-const verificationUrl =
-    `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+        const verificationUrl =
+            `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
 
-await sendVerificationEmail(
-    user.email,
-    user.fullName,
-    verificationUrl
-);
-
-
-        return res.status(201).json({
+        // Send response immediately
+        res.status(201).json({
             success: true,
-            message: "Registration successfully. please check your email to verify your account.",
+            message:
+                "Registration successful. Please check your email to verify your account.",
             data: {
                 id: user._id,
                 fullName: user.fullName,
@@ -76,17 +77,32 @@ await sendVerificationEmail(
                 profilePicture: user.profilePicture,
                 isEmailVerified: user.isEmailVerified
             }
-        })
-    }
+        });
 
-    catch(error){
-        console.error("Register error:", error)
-        return res.status(500).json({
-            success: false,
-            message: "Something went wrong while creating the account "
-        })
+        // Send email after response
+        sendVerificationEmail(
+            user.email,
+            user.fullName,
+            verificationUrl
+        ).catch((error) => {
+            console.error(
+                "Verification email sending error:",
+                error
+            );
+        });
+
+    } catch (error) {
+        console.error("Register error:", error);
+
+        if (!res.headersSent) {
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Something went wrong while creating the account"
+            });
+        }
     }
-}
+};
 
 export const loginUser = async (req, res) => {
     try {
