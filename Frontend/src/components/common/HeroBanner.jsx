@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   { image: "banner2.jpeg" },
-  { image: "banner3.jpeg" },
+  { image: "banner3.jpg" },
   { image: "banner1.jpeg" },
 ];
 
@@ -23,7 +23,7 @@ export function HeroBanner() {
 
   return (
     <div className="pt-5  ">
-      <div className="relative min-h-[140px] overflow-hidden rounded-3xl sm:min-h-[430px] lg:min-h-[480px]">
+      <div className="relative min-h-[140px] overflow-hidden sm:min-h-[430px] lg:min-h-[480px]">
         {/* banner image */}
         <img src={slide.image} alt="banner" className="absolute inset-0 h-full w-full object-contain" />
 

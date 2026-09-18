@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Mail, Phone, ArrowUpRight } from "lucide-react";
-import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
+import { MapPin, Mail, Phone, ArrowUpRight, Banknote } from "lucide-react";
+import { FaFacebook, FaTiktok, FaWhatsapp } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -12,7 +12,7 @@ export function Footer() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5 lg:gap-8">
             {/* brand */}
             <div className="lg:col-span-2">
-              <Link to="/" className="group inline-flex items-center gap-1">
+              <a href="/" className="group inline-flex items-center gap-1">
                 <div className="flex h-11 w-11 items-center justify-center overflow-hidden">
                   <img src="/logo1.jpeg" alt="SajiloKinmel" className="h-full w-full object-contain" />
                 </div>
@@ -20,7 +20,7 @@ export function Footer() {
                 <span className="text-xl font-bold tracking-tight text-foreground">
                   Sajilo<span className="text-gradient">Kinmel</span>
                 </span>
-              </Link>
+              </a>
 
               <p className="mt-5 max-w-md text-sm leading-7 text-slate-500">
                 Your everyday grocery destination for fresh fruits and vegetables, quality pantry essentials, snacks, beverages, dairy products, household necessities, and everything you need for a well-stocked home — delivered conveniently to your doorstep.
@@ -30,7 +30,6 @@ export function Footer() {
               <div className="mt-6 flex items-center gap-2.5">
                 {[
                   { Icon: FaFacebook, label: "Facebook", color: "text-[#1877F2]", hover: "hover:bg-[#1877F2]" },
-                  { Icon: FaInstagram, label: "Instagram", color: "text-[#E4405F]", hover: "hover:bg-[#E4405F]" },
                   { Icon: FaWhatsapp, label: "WhatsApp", color: "text-[#25D366]", hover: "hover:bg-[#25D366]" },
                   { Icon: FaTiktok, label: "TikTok", color: "text-[#000000]", hover: "hover:bg-black" },
                 ].map(({ Icon, label, color, hover }) => (
@@ -52,17 +51,17 @@ export function Footer() {
 
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link to="/" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
+                  <a href="/" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
                     All Categories
                     <ArrowUpRight size={13} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                  </Link>
+                  </a>
                 </li>
 
                 <li>
-                  <Link to="/search" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
+                  <a href="/search" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
                     Best Sellers
                     <ArrowUpRight size={13} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -73,31 +72,31 @@ export function Footer() {
 
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link to="/orders" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
+                  <a href="/orders" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
                     Track Orders
                     <ArrowUpRight size={13} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                  </Link>
+                  </a>
                 </li>
 
                 <li>
-                  <Link to="/wishlist" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
+                  <a href="/wishlist" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
                     Wishlist
                     <ArrowUpRight size={13} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                  </Link>
+                  </a>
                 </li>
 
                 <li>
-                  <Link to="/become-seller" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
+                  <a href="/become-seller" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
                     Sell on SajiloKinmel
                     <ArrowUpRight size={13} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                  </Link>
+                  </a>
                 </li>
 
                 <li>
-                  <Link to="/chat" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
+                  <a href="/chat" className="group inline-flex items-center gap-1 text-slate-700 transition-colors hover:text-emerald-600">
                     Messages
                     <ArrowUpRight size={13} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -128,6 +127,37 @@ export function Footer() {
                   <span className="break-all pt-1 text-slate-700">sajilokinmel@gmail.com</span>
                 </li>
               </ul>
+
+              {/* payment methods */}
+<div className="mt-7">
+  <h4 className="mb-3 text-sm font-bold text-slate-900">
+    Payment Methods
+  </h4>
+
+  <div className="flex items-center gap-2">
+    {/* Cash on Delivery */}
+    <div className="flex h-12 w-24 items-center gap-1.5 rounded-md border border-gray-300 bg-white px-2 shadow-sm">
+      <Banknote size={16} className="shrink-0 text-emerald-600" />
+      <span className="text-xs font-semibold leading-tight text-emerald-600">
+        Cash on
+        <br />
+        <span className="text-xs font-bold text-gray-800">
+        Delivery
+
+        </span>
+      </span>
+    </div>
+
+    {/* eSewa */}
+    <div className="flex h-12 w-20 items-center justify-center rounded-md border border-gray-300 px-2 shadow-sm">
+      <img
+        src="/esewa.png"
+        alt="eSewa"
+        className=" w-auto object-contain"
+      />
+    </div>
+  </div>
+</div>
             </div>
           </div>
         </div>

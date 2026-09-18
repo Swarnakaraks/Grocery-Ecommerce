@@ -25,7 +25,7 @@ export function CategoryStrip({ categories = [], loading }) {
         {!loading && categories.map((item, i) => (
           <motion.div key={item._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
             <a href={`/category/${item.slug}`} className="group flex flex-col items-center gap-2 text-center">
-              <div className="flex h-10 w-10 md:h-20 md:w-20 items-center justify-center overflow-hidden rounded-xl border border-brand-100 bg-brand-50 transition-all group-hover:scale-105">
+              <div className="flex h-25 w-25 md:h-30 md:w-30 items-center justify-center overflow-hidden rounded-xl border border-brand-100 bg-brand-50 transition-all group-hover:scale-105">
                 {item.image?.url ? <img src={item.image.url} alt={item.name} className="h-full w-full object-cover" /> : <Sprout className="h-8 w-8 text-primary" />}
               </div>
               <span className="line-clamp-1 text-[10px] font-medium text-foreground sm:text-sm">{item.name}</span>

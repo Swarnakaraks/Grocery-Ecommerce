@@ -68,7 +68,7 @@ export default function SellerOverviewPage() {
 
   const pendingCount = orders.filter((o) => o.status === "pending").length;
   const deliveredCount = orders.filter((o) => o.status === "delivered").length;
-  const firstName = user?.fullName?.split(" ")[0] || "Seller";
+  const fullName = user?.fullName|| "Seller";
 
   const stats = [
     {
@@ -130,7 +130,7 @@ export default function SellerOverviewPage() {
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Welcome back, {firstName}! 👋
+              Welcome back, {fullName}! 👋
             </h1>
 
             <p className="mt-2 max-w-xl text-sm leading-6 text-emerald-50 sm:text-base">

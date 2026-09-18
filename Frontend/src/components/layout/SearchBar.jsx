@@ -50,7 +50,10 @@ export function SearchBar({ className, mobile = false, onNavigate }) {
       setLoading(true);
 
       try {
-        const { data } = await productApi.getProducts({ search: value, limit: 7 });
+        const { data } = await productApi.getProducts({
+          search: value,
+          limit: 7,
+        });
         setSuggestions(data.products || []);
       } catch {
         setSuggestions([]);
@@ -74,6 +77,20 @@ export function SearchBar({ className, mobile = false, onNavigate }) {
     const next = [term, ...recent.filter((r) => r !== term)].slice(0, 6);
     setRecent(next);
     localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+  };
+
+  // remove one recent search
+  const removeRecent = (term) => {
+    const next = recent.filter((r) => r !== term);
+
+    setRecent(next);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+  };
+
+  // remove all recent searches
+  const clearRecent = () => {
+    setRecent([]);
+    localStorage.removeItem(RECENT_KEY);
   };
 
   // search results
@@ -111,13 +128,26 @@ export function SearchBar({ className, mobile = false, onNavigate }) {
         />
 
         {query && (
-          <button onClick={() => { setQuery(""); setSuggestions([]); }} className="pr-2 text-muted-foreground hover:text-foreground">
+          <button
+            onClick={() => {
+              setQuery("");
+              setSuggestions([]);
+            }}
+            className="pr-2 text-muted-foreground hover:text-foreground"
+          >
             <X className="h-4 w-4" />
           </button>
         )}
 
-        <button onClick={() => goToSearch()} className="mr-1 flex h-8 items-center gap-1 rounded-full bg-primary px-4 text-xs font-semibold text-white hover:bg-brand-600">
-          {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Search"}
+        <button
+          onClick={() => goToSearch()}
+          className="mr-1 flex h-8 items-center gap-1 rounded-full bg-primary px-4 text-xs font-semibold text-white hover:bg-brand-600"
+        >
+          {loading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            "Search"
+          )}
         </button>
       </div>
 
@@ -126,15 +156,44 @@ export function SearchBar({ className, mobile = false, onNavigate }) {
           {/* recent searches */}
           {!query.trim() && recent.length > 0 && (
             <div className="px-2 py-1.5">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Recent searches
-              </p>
+              <div className="mb-1 flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Recent searches
+                </p>
+
+                <button
+                  type="button"
+                  onClick={clearRecent}
+                  className="text-xs font-medium text-primary transition-colors hover:text-brand-600"
+                >
+                  Remove search history
+                </button>
+              </div>
 
               {recent.map((r, i) => (
-                <button key={i} onClick={() => goToSearch(r)} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-secondary">
-                  <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
-                  {r}
-                </button>
+                <div
+                  key={i}
+                  className="group flex w-full items-center rounded-lg hover:bg-secondary"
+                >
+                  <button
+                    type="button"
+                    onClick={() => goToSearch(r)}
+                    className="flex min-w-0 flex-1 items-center gap-2 px-2 py-2 text-left text-sm"
+                  >
+                    <TrendingUp className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="truncate">{r}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => removeRecent(r)}
+                    className="mr-2 rounded-full p-1 text-muted-foreground opacity-70 transition-all hover:bg-white hover:text-foreground group-hover:opacity-100"
+                    aria-label={`Remove ${r} from search history`}
+                    title="Remove from search history"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -148,17 +207,25 @@ export function SearchBar({ className, mobile = false, onNavigate }) {
 
           {/* suggestions */}
           {suggestions.map((product) => (
-            <button key={product._id} onClick={() => goToProduct(product)} className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-secondary">
+            <button
+              key={product._id}
+              onClick={() => goToProduct(product)}
+              className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-secondary"
+            >
               <img
                 src={getImageUrl(product.images)}
                 alt={product.name}
                 className="h-10 w-10 shrink-0 rounded-lg object-cover"
-                onError={(e) => (e.currentTarget.src = "/placeholder-product.svg")}
+                onError={(e) =>
+                  (e.currentTarget.src = "/placeholder-product.svg")
+                }
               />
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{product.name}</p>
-                <p className="text-xs text-muted-foreground">{product.category?.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {product.category?.name}
+                </p>
               </div>
 
               <span className="shrink-0 text-sm font-semibold text-primary">
@@ -169,7 +236,10 @@ export function SearchBar({ className, mobile = false, onNavigate }) {
 
           {/* all results */}
           {query.trim() && (
-            <button onClick={() => goToSearch()} className="mt-1 flex w-full items-center gap-2 rounded-lg border-t border-border px-2 py-2.5 text-left text-sm font-medium text-primary hover:bg-secondary">
+            <button
+              onClick={() => goToSearch()}
+              className="mt-1 flex w-full items-center gap-2 rounded-lg border-t border-border px-2 py-2.5 text-left text-sm font-medium text-primary hover:bg-secondary"
+            >
               <Search className="h-3.5 w-3.5" />
               See all results for "{query}"
             </button>

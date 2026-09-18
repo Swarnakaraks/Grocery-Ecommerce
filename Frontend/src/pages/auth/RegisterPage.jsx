@@ -56,7 +56,7 @@ export default function RegisterPage() {
     <div className="relative grid min-h-[88vh] grid-cols-1 justify-center space-x-14 overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-green-50 lg:grid-cols-[2.5fr_1.5fr]">
       {/* poster */}
       <div className="hidden h-[88vh] overflow-hidden lg:flex lg:items-center lg:justify-center">
-        <img src="/poster1.jpeg" alt="FreshMart poster" className="h-full w-full object-cover object-[center_13%]" />
+        <img src="/poster1.jpg" alt="FreshMart poster" className="h-full w-full object-cover object-[center_13%]" />
       </div>
 
       {/* register card */}
