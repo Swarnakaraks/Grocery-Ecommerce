@@ -281,11 +281,11 @@ export const getStoreById = async (req, res) => {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({
-        success: false,
-        message: "Invalid store ID"
-    });
-}
+            return res.status(400).json({
+                success: false,
+                message: "Invalid store ID"
+            });
+        }
 
         const store = await Store.findOne({
             _id: id,
@@ -306,6 +306,13 @@ export const getStoreById = async (req, res) => {
             });
         }
 
+        const isFollowing = req.user
+            ? store.followers.some(
+                (followerId) =>
+                    followerId.toString() === req.user.id.toString()
+            )
+            : false;
+
         return res.status(200).json({
             success: true,
             store: {
@@ -320,7 +327,8 @@ export const getStoreById = async (req, res) => {
                 followerCount: store.followers.length,
                 rating: store.rating,
                 isActive: store.isActive,
-                createdAt: store.createdAt
+                createdAt: store.createdAt,
+                isFollowing
             }
         });
     } catch (error) {
