@@ -210,9 +210,9 @@ export default function ProductDetailPage() {
             <RatingStars rating={product.rating?.average || 0} count={product.rating?.count || 0} showValue size={17} />
 
             {product.store && (
-              <Link to={`/store/${product.store._id}`} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
+              <a href={`/store/${product.store._id}`} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
                 <StoreIcon size={13} /> {product.store.storeName || product.store.name || "Visit Store"}
-              </Link>
+              </a>
             )}
           </div>
 

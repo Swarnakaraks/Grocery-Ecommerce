@@ -244,7 +244,7 @@ export default function CheckoutPage() {
   // empty cart
   if (items.length === 0) {
     return (
-      <div className="min-h-[70vh] bg-gradient-to-b from-emerald-50/60 via-background to-background px-4 py-16">
+      <div className="min-h-[70vh]  px-4 py-16">
         <div className="mx-auto flex max-w-md flex-col items-center text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -273,7 +273,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="px-4 md:px-20 min-h-screen bg-gradient-to-b from-emerald-50/50 via-background to-background">
+    <div className="px-4 md:px-20 min-h-screen">
       <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         {/* header */}
         <div className="flex items-center gap-3 mb-5">
@@ -309,7 +309,7 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
           {/* left side */}
           <div className="space-y-6 lg:col-span-2">
-            <div className="grid grid-cols-2 space-x-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 space-x-4">
               {/* delivery address */}
               <motion.section
                 initial={{ opacity: 0, y: 12 }}
@@ -324,9 +324,9 @@ export default function CheckoutPage() {
                       </div>
 
                       <div>
-                        <h3 className="font-bold tracking-tight">
+                        <p className="font-bold tracking-tight">
                           Delivery Address
-                        </h3>
+                        </p>
                         <p className="mt-0.5 text-xs text-muted-foreground">
                           Where should we deliver your groceries?
                         </p>
