@@ -151,7 +151,7 @@ export function Navbar() {
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="ml-0.5 flex shrink-0 items-center gap-1 rounded-full border border-border p-1 transition-colors hover:bg-secondary sm:ml-1 sm:gap-2 sm:py-1 sm:pl-1 sm:pr-2.5">
+                <button className="ml-0.5 flex shrink-0 items-center gap-1 rounded-full border border-border p-1 transition-colors hover:bg-secondary outline-none focus:outline-none focus:ring-0 sm:ml-1 sm:gap-2 sm:py-1 sm:pl-1 sm:pr-2.5">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user?.profilePicture?.url} alt={user?.fullName} />
                     <AvatarFallback>{user?.fullName?.[0]?.toUpperCase() || "U"}</AvatarFallback>

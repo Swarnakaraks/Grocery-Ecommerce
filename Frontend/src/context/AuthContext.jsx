@@ -41,6 +41,7 @@ export function AuthProvider({ children }) {
   // auth check
   useEffect(() => {
     setOnUnauthorized(() => {
+      setAccessToken(null);
       setUser(null);
     });
 

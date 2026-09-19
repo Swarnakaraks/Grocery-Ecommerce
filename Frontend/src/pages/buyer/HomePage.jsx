@@ -25,15 +25,44 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [visibleCategories, setVisibleCategories] = useState([]);
 
   // load categories
   useEffect(() => {
     categoryApi
       .getCategories()
-      .then(({ data }) => setCategories((data.categories || []).filter((c) => !c.parent)))
+      .then(({ data }) =>
+        setCategories((data.categories || []).filter((c) => !c.parent)),
+      )
       .catch(() => {})
       .finally(() => setCatLoading(false));
   }, []);
+
+  useEffect(() => {
+    const loadCategoriesWithProducts = async () => {
+      if (!categories.length) return;
+
+      const results = await Promise.all(
+        categories.map(async (category) => {
+          try {
+            const { data } = await productApi.getProducts({
+              category: category._id,
+              limit: 1,
+              sort: "popular",
+            });
+
+            return data.products?.length > 0 ? category : null;
+          } catch {
+            return null;
+          }
+        }),
+      );
+
+      setVisibleCategories(results.filter(Boolean).slice(0, 4));
+    };
+
+    loadCategoriesWithProducts();
+  }, [categories]);
 
   // load products
   const loadProducts = useCallback(async (pageNum) => {
@@ -103,21 +132,27 @@ export default function HomePage() {
       <CategoryStrip categories={categories} loading={catLoading} />
 
       {/* category sections */}
-      {categories.slice(0, 4).map((item) => (
+      {visibleCategories.map((item) => (
         <CategorySection key={item._id} category={item} />
       ))}
 
       {/* all products */}
-      <section className="container py-8">
+      <section className="py-8">
         <div className="mb-5 flex items-end justify-between">
           <div>
             <h2 className="text-xl font-bold sm:text-2xl">All Products</h2>
-            <p className="text-sm text-muted-foreground">Explore our full collection</p>
+            <p className="text-sm text-muted-foreground">
+              Explore our full collection
+            </p>
           </div>
         </div>
 
         <ProductGrid products={products} loading={loading} />
-        <LoadMoreButton onClick={handleLoadMore} loading={loadingMore} hasMore={hasMore} />
+        <LoadMoreButton
+          onClick={handleLoadMore}
+          loading={loadingMore}
+          hasMore={hasMore}
+        />
       </section>
     </div>
   );

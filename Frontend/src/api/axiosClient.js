@@ -5,7 +5,7 @@ const API_URL =
 
 export const axiosClient = axios.create({
     baseURL: API_URL,
-    withCredentials: true, // needed for refreshToken httpOnly cookie
+    withCredentials: true,
 });
 
 let accessToken = null;
@@ -23,49 +23,63 @@ export const setOnUnauthorized = (fn) => {
     onUnauthorized = fn;
 };
 
-axiosClient.interceptors.request.use((config) => {
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+// add access token
+axiosClient.interceptors.request.use(
+    (config) => {
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
 
-    return config;
-});
+        return config;
+    },
+    (error) => Promise.reject(error),
+);
 
 let isRefreshing = false;
 let pendingQueue = [];
 
 const processQueue = (error, token = null) => {
-    pendingQueue.forEach((p) => {
+    pendingQueue.forEach(({ resolve, reject }) => {
         if (error) {
-            p.reject(error);
+            reject(error);
         } else {
-            p.resolve(token);
+            resolve(token);
         }
     });
 
     pendingQueue = [];
 };
 
+// refresh expired access token
 axiosClient.interceptors.response.use(
-    (res) => res,
+    (response) => response,
+
     async (error) => {
         const originalRequest = error.config;
         const status = error?.response?.status;
-        const message = error?.response?.data?.message || "";
+
+        if (!originalRequest) {
+            return Promise.reject(error);
+        }
 
         const isAuthRoute =
-            originalRequest?.url?.includes("/auth/login") ||
-            originalRequest?.url?.includes("/auth/register") ||
-            originalRequest?.url?.includes("/auth/refresh");
+            originalRequest.url?.includes("/auth/login") ||
+            originalRequest.url?.includes("/auth/register") ||
+            originalRequest.url?.includes("/auth/refresh");
 
+        // access token expired
         if (
             status === 401 &&
             !originalRequest._retry &&
             !isAuthRoute
         ) {
+            // another request is already refreshing
             if (isRefreshing) {
                 return new Promise((resolve, reject) => {
-                    pendingQueue.push({ resolve, reject });
+                    pendingQueue.push({
+                        resolve,
+                        reject,
+                    });
                 })
                     .then((token) => {
                         originalRequest.headers.Authorization =
@@ -80,20 +94,26 @@ axiosClient.interceptors.response.use(
             isRefreshing = true;
 
             try {
+                // get new access token using refresh cookie
                 const { data } = await axiosClient.post("/auth/refresh");
 
-                accessToken = data.accessToken;
+                const newAccessToken = data.accessToken;
 
-                processQueue(null, accessToken);
+                setAccessToken(newAccessToken);
 
+                // retry waiting requests
+                processQueue(null, newAccessToken);
+
+                // retry original request
                 originalRequest.headers.Authorization =
-                    `Bearer ${accessToken}`;
+                    `Bearer ${newAccessToken}`;
 
                 return axiosClient(originalRequest);
             } catch (refreshError) {
+                // refresh token/session is no longer valid
                 processQueue(refreshError, null);
 
-                accessToken = null;
+                setAccessToken(null);
 
                 if (onUnauthorized) {
                     onUnauthorized();
