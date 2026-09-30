@@ -279,7 +279,7 @@ Frontend/
 
 | Member            | Responsibility                              |
 | ----------------- | -------------------------------------------- |
-| **Abhishek Sony** | Full-Stack Development & Project Integration |
+| **Abhisek** | Full-Stack Development & Project Integration |
 | **Seema**        | Frontend Development                         |
 | **Muna**        | Backend Development                          |
 
