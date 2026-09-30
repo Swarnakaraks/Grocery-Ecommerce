@@ -277,7 +277,7 @@ Frontend/
 
 ## 👨‍💻 Development Team
 
-| Member            | Responsibilit                               |
+| Member            | Responsibility                              |
 | ----------------- | -------------------------------------------- |
 | **Abhishek Sony** | Full-Stack Development & Project Integration |
 | **Seema**        | Frontend Development                         |
