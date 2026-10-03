@@ -275,16 +275,6 @@ Frontend/
 
 ---
 
-## 👨‍💻 Development Team
-
-| Member            | Responsibility                              |
-| ----------------- | -------------------------------------------- |
-| **Abhisek** | Full-Stack Development & Project Integration |
-| **Seema**        | Frontend Development                         |
-| **Muna**        | Backend Development                          |
-
----
-
 ## 💳 Payment
 
 SajiloKinmel supports:
